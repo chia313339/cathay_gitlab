@@ -1,0 +1,27 @@
+version: '2'
+
+services:
+  openldap:
+    container_name: openldap
+    image: 4c780dfa5f5e
+    ports:
+      - "8200:389"
+      - "8201:636"
+    volumes:
+      - ~/ldap/backup:/data/backup
+      - ~/ldap/data:/var/lib/openldap
+      - ~/ldap/config:/etc/openldap/slapd.d
+      - ~/ldap/certs:/assets/slapd/certs
+    command: [--copy-service,  --loglevel, debug]
+  phpldapadmin:
+    container_name: phpldapadmin
+    image: e340e61b03c4
+    ports:
+      - "8210:80"
+    environment:
+      - PHPLDAPADMIN_HTTPS="false"
+      - PHPLDAPADMIN_LDAP_HOSTS=openldap
+    links:
+      - openldap
+    depends_on:
+      - openldap

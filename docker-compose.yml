@@ -1,0 +1,21 @@
+version: '3.2'
+services:
+
+  gitlab:
+    image: 18da462b5ff5
+    hostname: 10.95.42.31
+    container_name: gitlab
+    restart: always
+    volumes:
+      - ~/gitlab/config:/etc/gitlab
+      - ~/gitlab/logs:/var/log/gitlab
+      - ~/gitlab/data:/var/opt/gitlab
+    ports:
+      - '8282:80'
+      - '8231:443'
+      - '8232:22'
+    networks:
+      - devel-net
+
+networks:
+  devel-net:
