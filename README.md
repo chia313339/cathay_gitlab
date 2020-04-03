@@ -15,6 +15,7 @@ docker-compose up
 ```
 
 完成後瀏覽器打上phpldapadmin的url+port，就可以進去ldap的管理畫面。
+預設帳號是cn=admin,dc=example,dc=org，密碼是admin。
 
 # 2. 建立gitlab
 
@@ -88,9 +89,13 @@ gitlab-rake gitlab:ldap:check
 好了以後瀏覽器打上gitlab網址就能使用了，第一次要打上root的密碼，為主要管理員帳號，之後就可以用一般人ldap帳號登入。
 一到香噴噴的部內gitlab就建置完成了。
 
+如果要將HTTP URL的內容修正確，到gitlab.rb進行設定修改。
+加上下面兩句
 
-
-
+```shell
+external_url 'http://ip:8080'
+nginx['listen_port'] = 80
+```
 
 
 
