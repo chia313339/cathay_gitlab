@@ -93,8 +93,8 @@ gitlab-rake gitlab:ldap:check
 加上下面兩句
 
 ```shell
-external_url 'http://ip:8080'
-nginx['listen_port'] = 80
+external_url 'http://ip:8080' #外面port
+nginx['listen_port'] = 80 #內部port
 ```
 
 
