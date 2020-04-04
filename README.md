@@ -97,5 +97,68 @@ external_url 'http://ip:8080' #外面port
 nginx['listen_port'] = 80 #內部port
 ```
 
+# 3. 備份gitlab
+
+若要備份整個gitlab，先進去container內部，記得備份以下路徑內容：
+
+```shell
+/etc/gitlab/gitlab.rb 配置文件須備份 
+/var/opt/gitlab/nginx/conf nginx配置文件 
+/etc/postfix/main.cfpostfix 郵件配置備份
+```
+
+然後打上下面語法進行備份，預設備份路徑會在/var/opt/gitlab/backups：
+
+```shell
+gitlab-rake gitlab:backup:create
+```
+# 4. 還原gitlab
+
+還原前需要先停止服務：
+
+```shell
+gitlab-ctl stop unicorn
+gitlab-ctl stop sidekiq
+```
+
+因為先前備份檔可能會有權限問題，先將權限改為777，前面的1481598919是備份編號，每個gitlab版本可能會有些差異。
+
+```shell
+chmod 777 /var/opt/gitlab/backups/1585927685_2020_04_03_11.1.4_gitlab_backup.tar
+```
+接下來用下面語法還原備份，一般來說會跳出確認選項，都打yes即可。
+```shell
+gitlab-rake gitlab:backup:restore BACKUP=1585927685_2020_04_03_11.1.4
+```
+還原完別忘了確認功能是否正常，包含前面說明的LDAP帳號連線狀況。
+
+# 5. 升級gitlab
+
+Gitlab升級是一件麻煩的事情，首先必須升級到該大版本的最後一個版本號，才能再升級大版本，詳細可以參考[官方文件](https://docs.gitlab.com/ee/policy/maintenance.html#upgrade-recommendations)。
+
+升級前不要忘記備份，建議先建立一個新的container複製一份現有gitlab，升級完後再取代現有gitlab，即取代port號即可，避免升級失敗等問題。
+
+首先先根據原本環境設定建一個純淨的gitlab container(id:3dd99e102e35)，然後把原本container(id:cb0ac58d01e0)的備份檔丟到外部VM，並且丟進去新的container進行還原，還原後一樣確認功能是否正常。
+
+```shell
+docker cp cb0ac58d01e0:/var/opt/gitlab/backups/1585927685_2020_04_03_11.1.4_gitlab_backup.tar ~/bk
+docker cp ~/bk/1585927685_2020_04_03_11.1.4_gitlab_backup.tar 3dd99e102e35:/var/opt/gitlab/backups 
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
