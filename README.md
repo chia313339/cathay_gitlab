@@ -145,7 +145,7 @@ docker cp cb0ac58d01e0:/var/opt/gitlab/backups/1585927685_2020_04_03_11.1.4_gitl
 docker cp ~/bk/1585927685_2020_04_03_11.1.4_gitlab_backup.tar 3dd99e102e35:/var/opt/gitlab/backups 
 ```
 
-
+確認一切正常後開始升級，升級方法很簡單，把原本的container停掉，然後進去docker-compose.yaml裡面，把原本的images改成新版的就可以了，一樣記得版本升級的限制，一定要先升到該大版本最新版，才能進下一版本。最後下docker-compose up啟動新的服務，確認裡面功能正常即完成升級。
 
 
 
